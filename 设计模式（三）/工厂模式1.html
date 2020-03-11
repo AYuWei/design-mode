@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 比如是想一个飞机大战的类 -->
+    <script>
+        // 原始模式  --这样增加了代码的复杂的，也不便阅读。 --后来我们使用构造函数。
+        var planeOne = {
+            width : 100,
+            height : 100,
+            blood : 100,
+            touch : function(){
+                this.blood -=50;
+                if(this.blood == 0){
+                    console.log('dev')
+                }
+            }
+        }
+        var planeTwo = {
+            width : 150,
+            height : 150,
+            blood : 200,
+            touch : function(){
+                this.blood -=50;
+                if(this.blood == 0){
+                    console.log("dev")
+                }
+            }
+        }
+    </script>
+</body>
+</html>

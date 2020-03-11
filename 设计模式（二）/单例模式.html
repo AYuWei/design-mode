@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="oBut">按钮</button>
+    <!-- <script>
+        // 单例模式 
+        function Test(name){
+            // 构造函数内部是这样返回的。
+            // var this = Object.create(Test.prototype)
+            // return this  // 当构造函数没返回值的时候则返回this,有返回值的时候则返回返回值
+
+            // 判断构造函数是否是第一次new  
+            if(typeof Test.instance === 'object'){
+                return Test.instance;
+            }        
+            this.name =  name ;
+            Test.instance = this;
+
+        }
+        var a = new Test('one')
+        var b = new Test();
+        console.log(a === b)  // 我们要让这个相等。
+
+        // 但是以上不符合开闭原则, 但是也是单例模式
+    </script> -->
+
+
+    <!-- 写的好不好？ -->
+    <script>
+        // function Test(name){
+        //     var instance = this;
+        //     this.name = name;
+            
+        //     Test = function(){
+        //         return instance;
+        //     }
+
+        //     // return this; // 隐式存在
+        // }
+
+        // var a = new Test();
+        // var b = new Test();
+        // console.log(a === b)
+
+
+        // 圣杯  --  单例模式。让这个构造函数是单例
+        // var Test = (function(){
+        //     var instance ;
+        //     return function(name){
+        //         if(typeof instance === 'object'){
+        //             return instance;
+        //         }
+        //         instance = this;
+        //         this.name = name ;
+        //     }
+        // }())
+
+        // var a = new Test();
+        // Test.prototype.lastName = 'deng';
+        // var b = new Test();
+        // console.log(a.lastName)
+        // console.log(b.lastName)
+
+
+
+        // 创建弹窗
+        // var CreateAler = function(text){
+        //     var oDiv = document.createElement('div')
+        //     oDiv.innerText = text;
+        //     oDiv.style.display = 'none';
+        //     document.body.appendChild(oDiv);
+        //     return oDiv;
+        // }
+
+        // 单例
+        // var singleAlert = (function(){
+        //     var oDiv = null;
+        //     console.log(1)
+        //     return function(text){
+        //         console.log(2)
+        //         if( oDiv !== null){
+        //             return oDiv;
+        //         }
+        //         oDiv = document.createElement('div');
+        //         oDiv.innerText = text;
+        //         oDiv.style.display="none";
+        //         document.body.appendChild(oDiv);
+        //         return oDiv;
+        //     }
+        // }())
+
+        // oBut.onclick = function(){
+        //     var oDiv = singleAlert("Hello World");
+        //     oDiv.style.display = 'block'
+        // }
+
+
+
+
+        // 让每一个传进来的函数都变成单例。
+        // 传func 返回新的函数
+        var getSingle = function(func){
+            var result ;
+            return function(){
+                if(!result){
+                    result = func.apply(this, arguments);
+                }
+                return result;
+            }
+        }
+
+        var CreateAler = function(text){
+            var oDiv = document.createElement('div')
+            oDiv.innerText = text;
+            oDiv.style.display = 'none';
+            document.body.appendChild(oDiv);
+            return oDiv;
+        }
+
+        var singleAlert = getSingle(CreateAler);
+
+        oBut.onclick = function(){
+            var oDiv = singleAlert("Hello World");
+            oDiv.style.display = 'block'
+        }
+
+    </script>
+</body>
+</html>

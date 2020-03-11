@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        input{
+            display: block;
+        }
+        span{
+            display: block;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        用户名：<input type="text" id="userDom" name="username">
+        <span class="showUser"></span>
+        密码：<input type="password" id="userPs" name="userps">
+        <span class="showPass"></span>
+        邮箱：<input type="email" name="email" id="oEmail">
+        <span id="showEmail"></span>
+        <button type="submit" id="Sub">提交</button>
+
+    </div>
+    <script src="./Validator.js"></script>
+
+    <!-- 简单的时候可以这样写 -->
+    <!-- <script>
+        // //用户名长度不能超过四个
+        //  密码不能为空 密码长度不能小于6 
+        // 先假定 数据是可以发送成功的
+
+        var userName = document.getElementById("userDom");
+        var userPass = document.getElementById("userPs");
+        var nameSpan = document.getElementsByClassName('showUser')[0];
+        var passSpan = document.getElementsByClassName('showPass')[0];
+
+        var Submit = document.getElementById('Sub');
+        // 以前写的表单验证。则需要扩展的话，拥余。
+        Submit.onclick = function(){
+            nameSpan.innerText='';
+            passSpan.innerText = '';
+            if(userName.value === ''){
+                nameSpan.innerText = '用户名不能为空';
+            } else if(userName.value != '' && userName.value.length > 4){
+                nameSpan.innerText = '用户名不能大于四位！';
+            }
+            
+            if(userPass.value === ''){
+                passSpan.innerText = "密码不能为空！"
+            } else if(userPass.value.length < 6 || userPass.value.length > 12){
+                passSpan.innerText = '密码长度必须6-12位！'
+            }
+        }
+    </script> -->
+
+    <!-- 使用代理模式 和 策略模式 -->
+    <script>
+        // //用户名长度不能超过四个
+        //  密码不能为空 密码长度不能小于6 
+        // 先假定 数据是可以发送成功的
+
+        var userName = document.getElementById("userDom");
+        var userPass = document.getElementById("userPs");
+        var nameSpan = document.getElementsByClassName('showUser')[0];
+        var passSpan = document.getElementsByClassName('showPass')[0];
+
+
+        // add 添加效验规则
+        //  （dom, showDom, [{strategy : 'isNonEmpty', errorMsg : '用户名不能为空'}, {strategy : 'maxLength:4', errorMsg : "用户名长度不能超过四！"}}]）
+
+        // 构造函数 -> 对象实例
+      
+
+        
+        var validator = new Validator();
+        
+
+        Sub.onclick = function(){
+            ProxyRequest();
+        }
+
+        // 扩展内容
+        validator.extend({
+            isEmail :function(value, errorMsg){
+                if(value != '' && value.indexOf("@") == -1){
+                    return errorMsg;
+                }
+                return true;
+            }
+        })
+
+        var ProxyRequest = (function(){
+            validator.add(userName, nameSpan, [{strategy : 'isNonEmpty', errorMsg : '用户名不能为空'}, {strategy : 'maxLength:4', errorMsg : "用户名长度不能超过四！"}])
+            validator.add(userPass, passSpan, [{strategy : 'isNonEmpty', errorMsg : '密码不能为空'}, {strategy : 'maxLength:12', errorMsg : "密码长度不能大于12位！"},{strategy : 'minLength:6', errorMsg : '密码长度不能小于6位！'}])
+            validator.add(oEmail, showEmail, [{strategy : 'isNonEmpty', errorMsg : '邮箱不能为空！'},{strategy : 'isEmail', errorMsg : '邮箱格式不正确！'}])
+            return function(){
+                if(validator.start() == true){
+                    console.log('校验成功后执行！')
+                }
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 工厂模式
+        function PlaneFactory(){}
+        // 创建对象的接口
+        PlaneFactory.create = function(type){
+            // 判断一下是否存在该子类方法
+            if(PlaneFactory.prototype[type] == undefined){
+                throw "on this constructor!";
+            }
+            // 让子类的原型继承PlaneFactory的原型。
+            if(PlaneFactory.prototype[type].prototype.__proto__ !== PlaneFactory.prototype){
+                PlaneFactory.prototype[type].prototype = new PlaneFactory();
+            }
+            
+            var arr = [].slice.call(arguments, 1);
+            var newPlane = new PlaneFactory.prototype[type](...arr);
+            return newPlane;
+        }
+
+        // 子类工厂都可以使用的公共方法。
+        PlaneFactory.prototype.touch = function(){
+            this.blood -= 50;
+            if(this.blood <= 0){
+                console.log('dev')
+            }
+        }
+
+        // 攻击型飞机 
+        PlaneFactory.prototype.AttackPlane = function(x, y){
+            this.x = x ;
+            this.y = y ;
+            this.width = 200;
+            this.height = 200;
+            this.blood = 200;
+            this.name = "SmallPlane";
+            this.attack = function(){
+                console.log("biu~ biu~ biu~!")
+            }
+        }
+        //  小飞机
+        PlaneFactory.prototype.SmallPlane = function(x, y){
+            this.x = x ; 
+            this.y = y ;
+            this.width = 100;
+            this.height = 100;
+            this.blood = 100;
+            this.tuche = function(){
+                this.blood -= 50;
+                if(this.blood <= 0){
+                    console.log("dev");
+                }
+            }
+        }
+        var attack = PlaneFactory.create("AttackPlane",10, 20);
+        var small = PlaneFactory.create("SmallPlane", 30, 40);
+    </script>
+</body>
+</html>

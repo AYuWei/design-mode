@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 使用构造函数类减少代码的复杂度。但是想增添新的方法，则需在构造函数里面添加。这违背了开闭原则，也违背了单一职责。
+        // 然而改变为工厂模式
+        function Plane(width, height, blood){
+            this.width = width,
+            this.height = height,
+            this.blood = blood,
+            this.touch = function(){
+                this.blood -= 50;
+                if(this.blood <= 0){
+                    console.log('dev')
+                }
+            }
+        }
+        Plane.prototype.Eat = function(){
+            this.blood += 100;
+        }
+        var planeOne = new Plane(100,100,100);
+        var planeTwo = new Plane(150,150,200);
+        console.log(planeOne,planeTwo)
+    </script>
+</body>
+</html>

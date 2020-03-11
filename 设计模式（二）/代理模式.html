@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 
+        邓哥和很多女生表白，但是女生同步同意得看心情。
+     -->
+    
+     <!-- <script>
+         var mrDeng = {
+             sendFlower : function(target){
+                var flower = "sunflower";
+                target.receiveFlower(flower);  // 女神收到花
+             }
+         }
+
+         var goddess = {
+             mood : null, //心情
+            //  收到花
+             receiveFlower : function(flower){
+                this.mood ? console.log('OK') : console.log("get out");
+             },
+            //  改变心情
+             changeMood : function(){
+                this.mood = Math.random() > 0.5;
+             },
+            // 创建心情
+            createMood : function(){
+                var self = this;
+                self.changeMood();
+                setInterval(() => {
+                    self.changeMood();
+                }, 1000)
+            }
+         }
+
+         // 我们设置代理，让女神心情好的时候才送花 。 百发百中
+         var chengProxy = {
+             proxyFlower : function(target){
+                 this.listenMood(target, function(){
+                    mrDeng.sendFlower(goddess);
+                 })
+             },
+             listenMood : function(target , cb){
+                var timer = setInterval(function(){
+                    if(target.mood){
+                        cb();
+                        clearInterval(timer);
+                    }
+                },500)
+             }
+         }
+
+         goddess.createMood();
+        // mrDeng.sendFlower(goddess);
+
+        chengProxy.proxyFlower(goddess);
+     </script> -->
+    
+
+
+     <!-- 图片懒加载 -->
+
+     <style>
+         div{
+            width: 200px;
+            height: 250px;
+         }
+         div img{
+             width: 100%;
+             height: 100%;
+         }
+     </style>
+     <div id="dome"></div>
+     <script>
+         var MyImage = function (id){
+             var oImg = new Image();
+             this.setSrc = function(src){
+                 oImg.src = src;
+             }
+             document.getElementById(id).appendChild(oImg);
+         }
+
+         var ProxyImage = (function(){
+             var oMyImg = new MyImage('dome');
+             var oNewImage = new Image();
+             oNewImage.onload = function(){
+                 oMyImg.setSrc(oNewImage.src);
+             }
+             return function(src){
+                 oMyImg.setSrc("./i.jpg");
+                 oNewImage.src = src;
+             }
+         })();
+         ProxyImage('https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1264893438,3028988962&fm=26&gp=0.jpg');
+        
+     </script>
+
+</body>
+</html>

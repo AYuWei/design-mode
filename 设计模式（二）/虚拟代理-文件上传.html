@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #999;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="dom">yuwei</div>
+    <button type="bg">add background</button>
+    <button type="cl">add color</button>
+    <button type="fs">add fontSize</button>
+    <button type="fw">add fontWeight</button>
+    <button type="op">add opacity</button>
+
+
+    <!-- 
+    <script>
+        var buttonAll = document.getElementsByTagName('button');
+        var obj = {
+            bg: ['backgroundColor', 'pink'],
+            cl: ['color', "#cddc39"],
+            fs: ['fontSize', '22px'],
+            fw: ['fontWeight', '700'],
+            op: ['opacity', '0.5']
+        }
+
+        function changeStyle(dom, typeArr) {
+            for (let i = 0; i < typeArr.length; i++) {
+                typeArr[i].onclick = function () {
+                    var Otype = typeArr[i].getAttribute('type');
+                    dom.style[obj[Otype][0]] = obj[Otype][1];
+                }
+            }
+        }
+        changeStyle(dom,buttonAll)
+    </script> -->
+
+
+    <!-- 我们文件上传的时候并不是想点击一个就上传一个，而我们想要的效果则是点击完了一并操作。
+    我们使用代理来阻止一下这样的情况 -->
+    <script>
+        // 使用代理，则原有的功能不变，照常写，只是外面添加了方法而已。
+        var oDiv = document.getElementById('dom');
+        var oButtonArray = document.getElementsByTagName('button');
+
+        var ProxyRequest = function (func) {
+            var cache = [];
+            var timer = null;
+            return function () {
+                cache.push(this.getAttribute('type'))
+                clearTimeout(timer);
+                timer = setInterval(function(){
+                    func(oDiv, cache);
+                    cache = [];
+                },2000)
+            }
+        }
+
+        var realChangeStyle = ProxyRequest(changeStyle);
+
+        for(var i = 0; i < oButtonArray.length ; i ++){
+            oButtonArray[i].onclick = realChangeStyle;
+        }
+
+        function changeStyle(dom, typeArr) {
+            var obj = {
+                bg: ['backgroundColor', 'pink'],
+                cl: ['color', "#cddc39"],
+                fs: ['fontSize', '22px'],
+                fw: ['fontWeight', '700'],
+                op: ['opacity', '0.5']
+            }
+            if(typeArr.constructor == Array){
+                typeArr.forEach(function(ele){
+                    dom.style[obj[ele][0]] = obj[ele][1];
+                })
+            } else {
+                dom.style[obj[ele][0]] = obj[1];
+            } 
+        }
+    </script>
+</body>
+
+</html>

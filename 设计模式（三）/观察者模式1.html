@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 工厂模式
+        function PlaneFactory(){
+            this.decorate_list = []; // 装饰池
+        }
+        PlaneFactory.prototype = new Event();
+        // 创建对象的接口
+        PlaneFactory.create = function(type){
+            // 判断一下是否存在该子类方法
+            if(PlaneFactory.prototype[type] == undefined){
+                throw "on this constructor!";
+            }
+            // 让子类的原型继承PlaneFactory的原型。
+            if(PlaneFactory.prototype[type].prototype.__proto__ !== PlaneFactory.prototype){
+                PlaneFactory.prototype[type].prototype = new PlaneFactory();
+            }
+            
+            var arr = [].slice.call(arguments, 1);
+            var newPlane = new PlaneFactory.prototype[type](...arr);
+            return newPlane;
+        }
+
+        // 子类工厂都可以使用的公共方法。
+        PlaneFactory.prototype.touch = function(){
+            this.blood -= 50;
+            if(this.blood <= 0){
+                console.log('dev')
+            }
+        }
+
+
+
+        // 结合所有的装饰者方法
+        PlaneFactory.prototype.decorators ={
+            // eat ont lift
+            eatOneLift: function(obj){
+                obj.blood += 100;
+            },
+            // eat two lift.
+            eatTwoLift : function(obj){
+                obj.blood += 200;
+            },
+            // 吃到伤害值
+            eatHarmLift : function(obj){
+                obj.blood -= 50;
+            }
+        }
+
+        // 收集对某对象的装饰描述
+        PlaneFactory.prototype.decorate = function(decorator){
+          this.decorate_list.push(decorator)
+        }
+
+        // 让装饰方法作用在该对象的身上
+        PlaneFactory.prototype.update = function(){
+            for(var i = 0 ; i < this.decorate_list.length ; i ++){
+                this.decorators[ this.decorate_list[i] ] &&  this.decorators[ this.decorate_list[i] ](this);
+            }
+        }
+
+        // 删除修饰方法
+        PlaneFactory.prototype.remove = function(type){
+            this.decorate_list = this.decorate_list.filter(ele => {
+                return ele != type;
+            })
+        } 
+
+        // 攻击型飞机 
+        PlaneFactory.prototype.AttackPlane = function(x, y){
+            this.x = x ;
+            this.y = y ;
+            this.width = 200;
+            this.height = 200;
+            this.blood = 200;
+            this.name = "SmallPlane";
+            this.attack = function(){
+                console.log("biu~ biu~ biu~!")
+            }
+        }
+        //  小飞机
+        PlaneFactory.prototype.SmallPlane = function(x, y){
+            this.x = x ; 
+            this.y = y ;
+            this.width = 100;
+            this.height = 100;
+            this.blood = 100;
+            this.tuche = function(){
+                this.blood -= 50;
+                if(this.blood <= 0){
+                    console.log("dev");
+                }
+            }
+        }
+
+        function Event(){
+            // 存储 不同时间类型对应的不同处理函数
+            this.cache = {};
+        }
+
+        Event.prototype.on = function(type, handle){
+            if( !this.cache[type] ){ // 没有此类型
+                this.cache[type] = [handle];
+            } else {
+                this.cache[type].push(handle);
+            }
+        }   
+        Event.prototype.emmit = function(){
+            var type = arguments[0];
+            var arr = [].slice.call(arguments, 1);
+            for(var i = 0 ; i < this.cache[type].length ; i ++){
+                this.cache[type][i].apply(this,arr)
+            }
+        }
+        Event.prototype.empty = function(type){
+            this.cache[type] = [];
+        }
+        Event.prototype.remove = function(type , func){
+            this.cache[type] = this.cache[type].filter(function(ele){
+               return ele != func ;
+            })
+        }
+
+        var oE = new Event();
+        function bind1(name , sex){
+            console.log(name , sex)
+        }
+        oE.on("over",bind1)
+
+        function bind2(name , sex){
+            console.log(name , sex)
+        }
+        oE.on("over",bind2)
+
+        // oE.emmit('over',arguments);
+        // oE.empty("over", )
+        // oE.remove('over', bind1)
+
+        var attack1 = PlaneFactory.create("AttackPlane",10, 20);
+        var small = PlaneFactory.create("SmallPlane", 30, 40);
+
+        attack1.decorate("eatOneLift");
+
+        attack1.on("OneLift",function(){
+            console.log("吃到了一条命", this.blood)
+            // attack1.decorate("eatOneLift");
+            attack1.update();
+        })
+        // attack1.emmit("OneLift")
+
+
+        
+    </script>
+</body>
+</html>

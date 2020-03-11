@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 使用工厂模式  -- 统一管理方法
+        // 我们是将复杂度转化为耦合度，减少代码的复杂度，但是这样违背了开闭原则。
+        function PlaneFather(type){
+            var newPlane = null;
+            switch (type){
+                case "SmallPlane":
+                    newPlane = new SmallPlane();
+                    break;
+                case "Warcraft":
+                    newPlane = new Warcraft();
+                    break;
+            }
+            // 增加飞机受阻的方法
+            newPlane.tuche = function(){
+                this.blood -= 50;
+                if(this.blood <= 0){
+                    console.log("over！")
+                }
+            }
+            return newPlane;
+        }
+
+        // 小飞机
+        function SmallPlane(){
+            this.width = 100;
+            this.height = 100;
+            this.blood = 100;
+        }
+        // 战斗机
+        function Warcraft(){
+            this.width = 210;
+            this.height = 300;
+            this.blood = 1000;
+        }
+        var planeOne = PlaneFather('Warcraft'); // 创建一个战斗机
+        var planeTwo = PlaneFather("SmallPlane"); // 创建一个小飞机。
+    </script>
+</body>
+</html>

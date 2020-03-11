@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="oBut">按钮</button>
+    <script>
+        // 点击按钮 -- 单例模式只出现一个 弹框
+
+        // 创建弹框
+        var CreateAlear = function(text){
+            const oDiv = document.createElement("div");
+            oDiv.innerText = text;
+            oDiv.style.display = 'none';
+            document.body.appendChild(oDiv);
+            return oDiv;
+        }
+
+        // 圣杯-永久保存
+        // 传递func 返回新的函数
+        var getSingle = function(func){
+            var resulf;
+            return function(){
+                if(!resulf){
+                    resulf = func.apply(this,arguments);
+                }
+                return resulf;
+            }
+        }
+
+        var singleAlear = getSingle(CreateAlear)
+
+        oBut.onclick = function(){
+            var oDiv = singleAlear('hello world!');
+            oDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

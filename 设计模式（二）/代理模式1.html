@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //  邓和想很多个女神送花  能否成功看女神的心情
+        var Deng = {
+            // 送花  target送花对象
+            sendFlower : function(target){
+                var flower = "sunFlower";
+                // 女神收到花
+                target.receiveFlower(flower);
+            }
+        }
+
+        var goddes = {
+            mood : null, // 当前心情
+            // 收到花
+            receiveFlower(flower){  
+                this.mood ? console.log("OK") : console.log("get out!");
+            },
+            // 创建心情
+            createMood(){
+                var self = this;
+                this.changeMood();
+                setInterval(() => {
+                    self.changeMood();
+                },500);
+            },
+            // 改变心情
+            changeMood(){
+                this.mood = Math.random() > 0.5;
+            }
+        }
+
+        // 我们设置代理，让女神心情好的时候才送花 。 百发百中
+        var chengProxy = {
+            // 代理送花
+            proxyFlower(target){
+                // 判断心情
+                this.listenMood(target,function(){
+                    Deng.sendFlower(goddes);
+                })
+            },
+            listenMood(target, cb){
+                var timer = setInterval(()=>{
+                    if(target.mood){
+                        cb();
+                        clearInterval(timer);
+                    }
+                },1000)
+            }
+        }
+
+        goddes.createMood();
+        // Deng.sendFlower(goddes);
+
+        // 使用代理
+        chengProxy.proxyFlower(goddes);
+
+
+
+    </script>
+</body>
+</html>
